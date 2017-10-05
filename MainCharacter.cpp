@@ -6,7 +6,7 @@
 #include "InputManager.h"
 
 void initShape(sf::RectangleShape& _shape) {
-	sf::Vector2f size(30.f, 30.f);
+	sf::Vector2f size(33.f, 60.f);
 
 	_shape.setSize(size);
 	_shape.setFillColor(sf::Color::Red);
@@ -23,6 +23,11 @@ MainCharacter::MainCharacter() : m_velocity(sf::Vector2f(0.f, 0.f)), m_isStatic(
 	m_collider.width = m_shape.getSize().x;
 	m_collider.height = m_shape.getSize().y;
 
+	// Init animator
+	int frames[] = { 1 };
+	m_animationController.addAnimation(new Animation("characters/main_idle.png", frames, 1));
+	m_animationController.setPosition(m_shape.getPosition());
+
 	InputManager::getInstance()->attachObserver(this);
 }
 
@@ -36,6 +41,7 @@ void MainCharacter::input() {
 		m_velocity.y = -GameSettings::MAIN_CHARACTER_JUMP_POWER;
 		if (m_jumpCounter > 1) {
 			m_shape.move(0.f, -GameSettings::MAIN_CHARACTER_JUMP_BOOST);
+			m_animationController.move(sf::Vector2f(0.f, -GameSettings::MAIN_CHARACTER_JUMP_BOOST));
 		}
 
 		m_jumpCounter--;
@@ -44,10 +50,12 @@ void MainCharacter::input() {
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		m_shape.setPosition(m_shape.getPosition() + sf::Vector2f(-GameSettings::MAIN_CHARACTER_SPEED, 0.f));
+		m_animationController.setPosition(m_shape.getPosition() + sf::Vector2f(-GameSettings::MAIN_CHARACTER_SPEED, 0.f));
 	}
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		m_shape.setPosition(m_shape.getPosition() + sf::Vector2f(GameSettings::MAIN_CHARACTER_SPEED, 0.f));
+		m_animationController.setPosition(m_shape.getPosition() + sf::Vector2f(GameSettings::MAIN_CHARACTER_SPEED, 0.f));
 	}
 }
 
@@ -61,7 +69,11 @@ void MainCharacter::update(float _dt) {
 
 	// Move 
 	m_shape.move(m_velocity * _dt);
+	m_animationController.move(m_velocity * _dt);
 	m_light.setPosition(getCenter());
+
+	// Update animator
+	m_animationController.update(_dt);
 }
 
 void MainCharacter::draw() {
@@ -69,7 +81,8 @@ void MainCharacter::draw() {
 	m_light.setScale(lightScale);
 	m_light.draw();
 
-	Display::draw(m_shape);
+	m_animationController.draw();
+	//Display::draw(m_shape);
 }
 
 bool const MainCharacter::isStatic() {
@@ -90,6 +103,7 @@ void MainCharacter::setCollider(const Physics::Collider & _collider) {
 
 void MainCharacter::move(const sf::Vector2f & _distance) {
 	m_shape.move(_distance);
+	m_animationController.move(_distance);
 
 	m_collider.x = m_shape.getPosition().x;
 	m_collider.y = m_shape.getPosition().y;
@@ -98,6 +112,7 @@ void MainCharacter::move(const sf::Vector2f & _distance) {
 void MainCharacter::collisionImpulse(const sf::Vector2f & _impulse) {
 	// Move out of collision
 	m_shape.move(_impulse);
+	m_animationController.move(_impulse);
 
 	m_collider.x = m_shape.getPosition().x;
 	m_collider.y = m_shape.getPosition().y;

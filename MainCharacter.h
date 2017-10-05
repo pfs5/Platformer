@@ -5,10 +5,12 @@
 #include "PhysicsEngine.h"
 #include "InputObserver.h"
 #include "SpotLight.h"
+#include "AnimationController.h"
 
 class MainCharacter : public GameObject, InputObserver{
 	// Visuals
 	sf::RectangleShape m_shape;
+	AnimationController m_animationController;
 	SpotLight m_light;
 
 	// Physics
