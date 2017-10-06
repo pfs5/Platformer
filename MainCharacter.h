@@ -23,6 +23,8 @@ class MainCharacter : public GameObject, InputObserver{
 	// Game
 	int m_jumpCounter;
 	bool m_jumped;
+	bool m_isFacingRight;
+	bool m_flying;
 
 public:
 	MainCharacter();

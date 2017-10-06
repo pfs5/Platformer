@@ -6,7 +6,7 @@
 #include "InputManager.h"
 
 void initShape(sf::RectangleShape& _shape) {
-	sf::Vector2f size(28.f, 63.f);
+	sf::Vector2f size(40.f, 63.f);
 
 	_shape.setSize(size);
 	_shape.setFillColor(sf::Color::Transparent);
@@ -18,7 +18,7 @@ void initShape(sf::RectangleShape& _shape) {
 	_shape.setPosition(position);
 }
 
-MainCharacter::MainCharacter() : m_velocity(sf::Vector2f(0.f, 0.f)), m_isStatic(false), m_jumpCounter(0), m_jumped(false) {
+MainCharacter::MainCharacter() : m_velocity(sf::Vector2f(0.f, 0.f)), m_isStatic(false), m_jumpCounter(0), m_jumped(false), m_isFacingRight(true), m_flying(false){
 	initShape(m_shape);
 	
 	m_collider.gameObject = this;
@@ -42,6 +42,7 @@ MainCharacter::~MainCharacter() {
 void MainCharacter::input() {
 	// Jump
 	if (m_jumpCounter > 0 && m_jumped) {
+		m_flying = true;
 		m_velocity.y = -GameSettings::MAIN_CHARACTER_JUMP_POWER;
 		if (m_jumpCounter > 1) {
 			moveCharacter(sf::Vector2f(0.f, -GameSettings::MAIN_CHARACTER_JUMP_BOOST));
@@ -51,14 +52,29 @@ void MainCharacter::input() {
 		m_jumped = false;
 	}
 	
+	if (!m_flying) {
+		std::string animation = m_isFacingRight ? "IdleRight" : "IdleLeft";
+		m_animationController.playAnimation(animation);
+	} else {
+		std::string animation = (m_velocity.y < 0.f) ? "Jump" : "Fall";
+		std::string side = m_isFacingRight ? "Right" : "Left";
+		m_animationController.playAnimation(animation + side);
+	}
+
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		moveCharacter(sf::Vector2f(-GameSettings::MAIN_CHARACTER_SPEED, 0.f));
-		m_animationController.playAnimation("IdleLeft");
+		if (!m_flying) {
+			m_animationController.playAnimation("RunLeft");
+		}
+		m_isFacingRight = false;
 	}
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		moveCharacter(sf::Vector2f(GameSettings::MAIN_CHARACTER_SPEED, 0.f));
-		m_animationController.playAnimation("IdleRight");
+		if (!m_flying) {
+			m_animationController.playAnimation("RunRight");
+		}
+		m_isFacingRight = true;
 	}
 }
 
@@ -117,6 +133,7 @@ void MainCharacter::collisionImpulse(const sf::Vector2f & _impulse) {
 
 	// Reset jump
 	m_jumpCounter = GameSettings::MAIN_CHARACTER_JUMP_COUNT;
+	m_flying = false;
 }
 
 const sf::Vector2f MainCharacter::getCenter() {

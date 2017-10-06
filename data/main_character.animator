@@ -2,5 +2,12 @@
 S 0
 
 # Animations
-A IdleRight characters/main_idle_right.png 1
-A IdleLeft characters/main_idle_left.png 1
+# -- name ------------ path --------------- loop --- frames ------------
+
+A IdleRight loop characters/main_idle_right.png 1
+A IdleLeft loop characters/main_idle_left.png 1
+A RunRight loop characters/main_run_right.png 2 3 2 3
+A RunLeft loop characters/main_run_left.png 2 3 2 3
+A JumpRight noloop characters/main_jump_right.png 6 6
+A FallRight loop characters/main_fall_right.png 2 2
+A FallLeft loop characters/main_fall_left.png 2 2

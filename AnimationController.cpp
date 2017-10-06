@@ -3,6 +3,7 @@
 #include "Util.h"
 #include <iostream>
 #include <fstream>
+#include <string>
 
 AnimationController::AnimationController() : m_currentAnimation (0){
 }
@@ -53,11 +54,12 @@ void AnimationController::loadFromFile(const std::string & _path) {
 		// Animation
 		if (line[0] == 'A') {
 			std::vector <std::string> data = split(line.substr(2, line.length() + 1), " ");
-			int *frames = new int[data.size() - 2];
-			for (int i = 0; i < data.size() - 2; ++i) {
-				frames[i] = std::stoi(data[i + 2]);
+			int *frames = new int[data.size() - 3];
+			for (int i = 0; i < data.size() - 3; ++i) {
+				frames[i] = std::stoi(data[i + 3]);
 			}
-			addAnimation(new Animation(data[1], frames, data.size() - 2), data[0]);
+			bool looping = (data[1].compare(std::string("loop")) == 0);
+			addAnimation(new Animation(data[2], frames, data.size() - 3, true), data[0]);
 
 			delete[] frames;
 		}
@@ -74,6 +76,9 @@ void AnimationController::addAnimation(Animation * _a, const std::string& _anima
 void AnimationController::playAnimation(std::string _animationName) {
 	if (m_animationNames.find(_animationName) != m_animationNames.end()) {
 		m_currentAnimation = m_animationNames.at(_animationName);
+		if (!m_animations[m_currentAnimation]->isLooping()) {
+			m_animations[m_currentAnimation]->reset();
+		}
 	}
 }
 
