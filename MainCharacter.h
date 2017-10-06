@@ -14,6 +14,7 @@ class MainCharacter : public GameObject, InputObserver{
 	SpotLight m_light;
 
 	// Physics
+	sf::Vector2f m_position;
 	Physics::Collider m_collider;
 	sf::Vector2f m_velocity;
 
@@ -43,5 +44,9 @@ public:
 
 	// Observer
 	virtual void keyDown(sf::Keyboard::Key _key) override;
+
+private:
+	void moveCharacter(const sf::Vector2f& _distance);
+	void updateCollider();
 };
 
