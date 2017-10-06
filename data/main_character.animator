@@ -1,0 +1,6 @@
+# Starting animation
+S 0
+
+# Animations
+A IdleRight characters/main_idle_right.png 1
+A IdleLeft characters/main_idle_left.png 1

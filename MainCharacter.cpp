@@ -10,7 +10,7 @@ void initShape(sf::RectangleShape& _shape) {
 
 	_shape.setSize(size);
 	_shape.setFillColor(sf::Color::Transparent);
-	_shape.setOutlineColor(sf::Color::Green);
+	_shape.setOutlineColor(sf::Color(0, 255, 0, 100));
 	_shape.setOutlineThickness(1.f);
 
 	sf::Vector2u windowSize = Display::getWindow().getSize();
@@ -27,9 +27,7 @@ MainCharacter::MainCharacter() : m_velocity(sf::Vector2f(0.f, 0.f)), m_isStatic(
 
 	// TODO refactor animation loading
 	// Init animator
-	int frames[] = { 1 };
-	m_animationController.addAnimation(new Animation("characters/main_idle_right.png", frames, 1));
-	m_animationController.addAnimation(new Animation("characters/main_idle_left.png", frames, 1));
+	m_animationController.loadFromFile("data/main_character.animator");
 	m_animationController.setPosition(m_shape.getPosition());
 
 	m_position = m_shape.getPosition();
@@ -55,10 +53,12 @@ void MainCharacter::input() {
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
 		moveCharacter(sf::Vector2f(-GameSettings::MAIN_CHARACTER_SPEED, 0.f));
+		m_animationController.playAnimation("IdleLeft");
 	}
 	
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		moveCharacter(sf::Vector2f(GameSettings::MAIN_CHARACTER_SPEED, 0.f));
+		m_animationController.playAnimation("IdleRight");
 	}
 }
 
@@ -78,9 +78,9 @@ void MainCharacter::update(float _dt) {
 
 void MainCharacter::draw() {
 	// TODO Refactoring for light
-	float lightScale = 0.5f * (float)m_jumpCounter - GameSettings::MAIN_CHARACTER_JUMP_LIGHT_FADE * (0.5f * (float)m_jumpCounter - 1.f);
-	m_light.setScale(lightScale);
-	m_light.draw();
+	//float lightScale = 0.5f * (float)m_jumpCounter - GameSettings::MAIN_CHARACTER_JUMP_LIGHT_FADE * (0.5f * (float)m_jumpCounter - 1.f);
+	//m_light.setScale(lightScale);
+	//m_light.draw();
 
 	m_animationController.draw();
 	Display::draw(m_shape);
