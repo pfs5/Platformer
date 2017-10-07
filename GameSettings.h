@@ -1,6 +1,8 @@
 #pragma once
 
 namespace GameSettings {
+	const bool PRINT_FPS = false;
+
 	const float MAIN_CHARACTER_SPEED = 3.f;
 	const int MAIN_CHARACTER_ANIMATION_MULTIPLIER = 5;
 	const float MAIN_CHARACTER_JUMP_POWER = 700.f;

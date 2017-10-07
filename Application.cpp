@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Util.h"
 #include "Display.h"
+#include "GameSettings.h"
 #include <SFML/System/Clock.hpp>
 
 void calculateFPS(bool _print_fps) {
@@ -66,7 +67,7 @@ void Application::runMainLoop() {
 		// Rendering
 		m_gameStates.top()->draw();
 
-		calculateFPS(true);
+		calculateFPS(GameSettings::PRINT_FPS);
 		Display::display();
 	}
 }
