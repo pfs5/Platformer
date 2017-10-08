@@ -6,7 +6,7 @@
 #include "InputManager.h"
 
 void initShape(sf::RectangleShape& _shape) {
-	sf::Vector2f size(40.f, 63.f);
+	sf::Vector2f size(100.f, 100.f);
 
 	_shape.setSize(size);
 	_shape.setFillColor(sf::Color::Transparent);
@@ -72,7 +72,7 @@ void MainCharacter::input() {
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
 		moveCharacter(sf::Vector2f(GameSettings::MAIN_CHARACTER_SPEED, 0.f));
 		if (!m_flying) {
-			m_animationController.playAnimation("RunRight");
+			m_animationController.playAnimation("TestRunRight");
 		}
 		m_isFacingRight = true;
 	}

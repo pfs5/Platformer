@@ -4,6 +4,7 @@ S 0
 # Animations
 # -- name ------------ path --------------- loop --- frames ------------
 
+A TestRunRight loop characters/test_run_right.png 2 2 2 2 2 2
 A IdleRight loop characters/main_idle_right.png 1
 A IdleLeft loop characters/main_idle_left.png 1
 A RunRight loop characters/main_run_right.png 2 3 2 3
