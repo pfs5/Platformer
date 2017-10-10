@@ -15,21 +15,6 @@ AnimationController::~AnimationController() {
 	}
 }
 
-std::vector<std::string> split(std::string _s, std::string _delimiter) {
-	std::vector<std::string> data;
-	size_t pos = 0;
-	std::string token;
-
-	while ((pos = _s.find(_delimiter)) != std::string::npos) {
-		token = _s.substr(0, pos);
-		data.push_back(token);
-		_s.erase(0, pos + _delimiter.length());
-	}
-	data.push_back(_s);
-	
-	return data;
-}
-
 void AnimationController::loadFromFile(const std::string & _path) {
 	std::string line;
 	std::ifstream file(_path);
@@ -53,7 +38,7 @@ void AnimationController::loadFromFile(const std::string & _path) {
 
 		// Animation
 		if (line[0] == 'A') {
-			std::vector <std::string> data = split(line.substr(2, line.length() + 1), " ");
+			std::vector <std::string> data = Util::split(line.substr(2, line.length() + 1), " ");
 			int *frames = new int[data.size() - 3];
 			for (int i = 0; i < data.size() - 3; ++i) {
 				frames[i] = std::stoi(data[i + 3]);

@@ -32,4 +32,20 @@ namespace Util {
 	inline sf::Vector2f multiplyByValue(const sf::Vector2f& _v1, const sf::Vector2f& _v2) {
 		return sf::Vector2f(_v1.x * _v2.x, _v1.y * _v2.y);
 	}
+
+	// FILE LOADING
+	inline std::vector<std::string> split(std::string _s, std::string _delimiter) {
+		std::vector<std::string> data;
+		size_t pos = 0;
+		std::string token;
+
+		while ((pos = _s.find(_delimiter)) != std::string::npos) {
+			token = _s.substr(0, pos);
+			data.push_back(token);
+			_s.erase(0, pos + _delimiter.length());
+		}
+		data.push_back(_s);
+
+		return data;
+	}
 }

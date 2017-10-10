@@ -1,13 +1,13 @@
 #pragma once
 #include "GameState.h"
-#include "BackgroundImage.h"
+#include "Level.h"
 #include "MainCharacter.h"
 #include "PhysicsEngine.h"
 
 class PlayState : public GameState {
 	Physics::PhysicsEngine m_engine;
 
-	BackgroundImage m_backgroundImage;
+	Level m_level;
 	MainCharacter m_mainCharacter;
 	std::vector<GameObject*> m_gameObjects;
 

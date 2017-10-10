@@ -5,7 +5,9 @@
 
 Obstacle::Obstacle(sf::Vector2f _size, sf::Vector2f _position) : m_isStatic(true){
 	m_shape.setSize(_size);
-	m_shape.setFillColor(sf::Color::Black);
+	m_shape.setFillColor(sf::Color::Transparent);
+	m_shape.setOutlineColor(sf::Color::Transparent);
+	m_shape.setOutlineThickness(1.f);
 	m_shape.setPosition(_position);
 
 	m_collider.gameObject = this;
