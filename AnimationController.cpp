@@ -44,7 +44,7 @@ void AnimationController::loadFromFile(const std::string & _path) {
 				frames[i] = std::stoi(data[i + 3]);
 			}
 			bool looping = (data[1].compare(std::string("loop")) == 0);
-			addAnimation(new Animation(data[2], frames, data.size() - 3, true), data[0]);
+			addAnimation(new Animation(data[2], frames, data.size() - 3, looping), data[0]);
 
 			delete[] frames;
 		}
@@ -68,13 +68,13 @@ void AnimationController::playAnimation(std::string _animationName) {
 }
 
 void AnimationController::draw() {
-	if (m_animations.size() > 0) {
+	if (m_animations.size() > 0 && m_currentAnimation >= 0) {
 		m_animations[m_currentAnimation]->draw();
 	}
 }
 
 void AnimationController::update(float _dt) {
-	if (m_animations.size() > 0) {
+	if (m_animations.size() > 0 && m_currentAnimation >= 0) {
 		m_animations[m_currentAnimation]->update(_dt);
 	}
 }

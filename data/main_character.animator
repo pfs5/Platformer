@@ -12,3 +12,5 @@ A RunLeft loop characters/main_run_left.png 2 3 2 3
 A JumpRight noloop characters/main_jump_right.png 6 6
 A FallRight loop characters/main_fall_right.png 2 2
 A FallLeft loop characters/main_fall_left.png 2 2
+A DashLeft noloop characters/main_dash_left.png 3 3 3 3 3
+A DashRight noloop characters/main_dash_right.png 3 3 3 3 3

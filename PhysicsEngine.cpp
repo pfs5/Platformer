@@ -44,13 +44,17 @@ namespace Physics {
 	}
 
 	void PhysicsEngine::PhysicsEngine::addGameObject(GameObject & _o) {
-		if (_o.getCollider() != nullptr) {
-			if (_o.isStatic()) {
-				m_staticColliders.push_back(_o.getCollider());
+		 std::vector<Physics::Collider*> colliders = _o.getColliders();
+
+		for (int i = 0; i < _o.getColliders().size(); ++i) {
+			if (colliders[i] != nullptr) {
+				if (_o.isStatic()) {
+					m_staticColliders.push_back(colliders[i]);
+				}
+				else {
+					m_dynamicColliders.push_back(colliders[i]);
+				}
 			}
-			else {
-				m_dynamicColliders.push_back(_o.getCollider());
-			}
-		}
+		}	
 	}
 }

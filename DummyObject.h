@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 #include <SFML\Graphics.hpp>
+#include <vector>
 
 class DummyObject : public GameObject {
 	sf::RectangleShape m_shape;
@@ -14,7 +15,7 @@ public:
 	virtual void draw() override;
 
 	virtual const bool isStatic() override;
-	virtual Physics::Collider* const getCollider() override;
+	virtual std::vector<Physics::Collider*> const getColliders() override;
 	virtual void setCollider(const Physics::Collider& _collider) override;
 
 	virtual void move(const sf::Vector2f& _distance) override;

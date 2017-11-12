@@ -2,6 +2,7 @@
 #include "DummyObject.h"
 #include "Display.h"
 #include "Util.h"
+
 #include <SFML\Graphics.hpp>
 
 void initShape(sf::RectangleShape& _shape, const sf::Vector2f _size, const sf::Color _color) {
@@ -40,11 +41,11 @@ const bool DummyObject::isStatic() {
 	return false;
 }
 
-Physics::Collider * const DummyObject::getCollider() {
+std::vector<Physics::Collider *> const DummyObject::getColliders() {
 	m_collider.x = m_shape.getPosition().x;
 	m_collider.y = m_shape.getPosition().y;
 
-	return &m_collider;
+	return std::vector<Physics::Collider*>({ &m_collider });
 }
 
 void DummyObject::setCollider(const Physics::Collider & _collider) {

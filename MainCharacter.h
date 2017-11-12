@@ -6,11 +6,13 @@
 #include "InputObserver.h"
 #include "SpotLight.h"
 #include "AnimationController.h"
+#include "Weapon.h"
 
 class MainCharacter : public GameObject, InputObserver{
 	// Visuals
 	sf::RectangleShape m_shape;
 	AnimationController m_animationController;
+	AnimationController m_effectsAnimationController;
 	SpotLight m_light;
 
 	// Physics
@@ -20,11 +22,16 @@ class MainCharacter : public GameObject, InputObserver{
 
 	bool m_isStatic;
 
+	// Combat
+	Weapon m_weapon;
+
 	// Game
 	int m_jumpCounter;
 	bool m_jumped;
+	bool m_dashed;
 	bool m_isFacingRight;
 	bool m_flying;
+	bool m_dashing;
 
 public:
 	MainCharacter();
@@ -36,7 +43,7 @@ public:
 	virtual void draw() override;
 
 	virtual const bool isStatic() override;
-	virtual Physics::Collider* const getCollider() override;
+	virtual std::vector<Physics::Collider*> const getColliders() override;
 	virtual void setCollider(const Physics::Collider& _collider) override;
 
 	virtual void move(const sf::Vector2f& _distance) override;

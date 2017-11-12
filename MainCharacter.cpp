@@ -14,8 +14,9 @@ void initShape(sf::RectangleShape& _shape) {
 	_shape.setOutlineThickness(1.f);
 
 	sf::Vector2u windowSize = Display::getWindow().getSize();
-	sf::Vector2f position((float)windowSize.x / 2.f - size.x / 2.f, 200.f);
-	_shape.setPosition(position);
+	_shape.setOrigin(size / 2.f);
+	sf::Vector2f position((float)windowSize.x / 2.f, 200.f);
+	_shape.setPosition(0, 0);
 }
 
 MainCharacter::MainCharacter() : m_velocity(sf::Vector2f(0.f, 0.f)), m_isStatic(false), m_jumpCounter(0), m_jumped(false), m_isFacingRight(true), m_flying(false){
@@ -30,7 +31,13 @@ MainCharacter::MainCharacter() : m_velocity(sf::Vector2f(0.f, 0.f)), m_isStatic(
 	m_animationController.loadFromFile("data/main_character.animator");
 	m_animationController.setPosition(m_shape.getPosition());
 
+	m_effectsAnimationController.loadFromFile("data/main_character_effects.animator");
+	m_effectsAnimationController.setPosition(m_shape.getPosition());
+
 	m_position = m_shape.getPosition();
+
+	// Init weapon
+	m_weapon.setRoot(m_position);
 
 	InputManager::getInstance()->attachObserver(this);
 }
@@ -56,9 +63,24 @@ void MainCharacter::input() {
 		std::string animation = m_isFacingRight ? "IdleRight" : "IdleLeft";
 		m_animationController.playAnimation(animation);
 	} else {
-		std::string animation = (m_velocity.y < 0.f) ? "Jump" : "Fall";
-		std::string side = m_isFacingRight ? "Right" : "Left";
-		m_animationController.playAnimation(animation + side);
+		// In air
+		if (m_dashed) {
+			m_dashed = false;
+			m_dashing = true;
+
+			m_velocity.x = GameSettings::MAIN_CHARACTER_DASH_BOOST;
+			m_velocity.x *= m_isFacingRight ? 1 : -1;
+
+			std::string side = m_isFacingRight ? "Right" : "Left";
+			m_animationController.playAnimation("Dash" + side);
+
+			m_effectsAnimationController.setPosition(m_position);
+			//m_effectsAnimationController.playAnimation("DashEffect" + side);
+		} else if (!m_dashing){
+			std::string animation = (m_velocity.y < 0.f) ? "Jump" : "Fall";
+			std::string side = m_isFacingRight ? "Right" : "Left";
+			m_animationController.playAnimation(animation + side);
+		}
 	}
 
 	if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
@@ -76,40 +98,52 @@ void MainCharacter::input() {
 		}
 		m_isFacingRight = true;
 	}
+
 }
 
 void MainCharacter::update(float _dt) {
 	// Apply gravity
 	m_velocity.y += GameSettings::GRAVITY * _dt;
 
+	// Apply vertical air resistance
+	m_velocity.x *= (1.f - GameSettings::AIR_RESISTANCE_HORIZONTAL);
+
 	// Move 
 	moveCharacter(m_velocity * _dt);
-	m_light.setPosition(getCenter());
+	m_light.setPosition(m_position);
 
 	// Update animator
 	m_animationController.update(_dt);
+	m_effectsAnimationController.update(_dt);
+
+	// Update weapon
+	m_weapon.update(_dt);
 
 	updateCollider();
 }
 
 void MainCharacter::draw() {
 	// TODO Refactoring for light
-	//float lightScale = 0.5f * (float)m_jumpCounter - GameSettings::MAIN_CHARACTER_JUMP_LIGHT_FADE * (0.5f * (float)m_jumpCounter - 1.f);
+	float lightScale = 0.5f * (float)m_jumpCounter - GameSettings::MAIN_CHARACTER_JUMP_LIGHT_FADE * (0.5f * (float)m_jumpCounter - 1.f);
 	//m_light.setScale(lightScale);
-	//m_light.draw();
+	m_light.draw();
 
 	m_animationController.draw();
-	Display::draw(m_shape);
+	m_effectsAnimationController.draw();
+
+	m_weapon.draw();
+
+	//Display::draw(m_shape);		// collider
 }
 
 bool const MainCharacter::isStatic() {
 	return m_isStatic;
 }
 
-Physics::Collider * const MainCharacter::getCollider() {
+ std::vector<Physics::Collider*> const MainCharacter::getColliders() {
 	updateCollider();
 
-	return &m_collider;
+	return std::vector<Physics::Collider*>({ &m_collider });
 }
 
 void MainCharacter::setCollider(const Physics::Collider & _collider) {
@@ -134,6 +168,7 @@ void MainCharacter::collisionImpulse(const sf::Vector2f & _impulse) {
 	// Reset jump
 	m_jumpCounter = GameSettings::MAIN_CHARACTER_JUMP_COUNT;
 	m_flying = false;
+	m_dashing = false;
 }
 
 const sf::Vector2f MainCharacter::getCenter() {
@@ -144,6 +179,12 @@ void MainCharacter::keyDown(sf::Keyboard::Key _key) {
 	if (_key == sf::Keyboard::Space) {
 		m_jumped = true;
 	}
+
+	if (_key == sf::Keyboard::LControl) {
+		if (m_flying) {
+			m_dashed = true;
+		}
+	}
 }
 
 void MainCharacter::moveCharacter(const sf::Vector2f & _distance) {
@@ -152,10 +193,12 @@ void MainCharacter::moveCharacter(const sf::Vector2f & _distance) {
 	m_shape.move(_distance);
 	m_animationController.move(_distance);
 
+	m_weapon.move(_distance);
+
 	updateCollider();
 }
 
 void MainCharacter::updateCollider() {
-	m_collider.x = m_position.x;
-	m_collider.y = m_position.y;
+	m_collider.x = m_position.x - m_collider.width / 2.f;
+	m_collider.y = m_position.y - m_collider.height / 2.f;
 }

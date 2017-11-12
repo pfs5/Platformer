@@ -6,14 +6,9 @@
 #include <iostream>
 
 PlayState::PlayState() {
-	// Load level
+	// Setup level
 	m_level.load("level3");
 	
-	std::vector<Obstacle*> obstacles = m_level.getObstacles();
-	for (int i = 0; i < obstacles.size(); ++i) {
-		m_engine.addGameObject(*obstacles[i]);
-	}
-
 	// Setup view
 	m_view.reset(sf::FloatRect(0.f, 0.f, Display::WIDTH, Display::HEIGHT));
 	m_view.setViewport(sf::FloatRect(0.f, 0.f, 1.f, 1.f));
@@ -23,12 +18,12 @@ PlayState::PlayState() {
 	// Init physics
 	m_engine.addGameObject(m_mainCharacter);
 
-	initTestEnvironment();
+	std::vector<Obstacle*> obstacles = m_level.getObstacles();
+	for (int i = 0; i < obstacles.size(); ++i) {
+		m_engine.addGameObject(*obstacles[i]);
+	}
 
-	//GameObject* dummy1 = new DummyObject();
-	//m_engine.addGameObject(*dummy1);
-	//m_gameObjects.push_back(dummy1);
-	
+	initTestEnvironment();
 }
 
 
@@ -86,19 +81,5 @@ void PlayState::initTestEnvironment() {
 	GameObject* leftWall = new Obstacle(sf::Vector2f(200.f, 1000.f), sf::Vector2f(-200.f, 0));
 	m_gameObjects.push_back(leftWall);
 	m_engine.addGameObject(*leftWall);
-
-	/*
-	std::vector<GameObject*> platforms;
-	platforms.push_back(new Obstacle(sf::Vector2f(100.f, 25.f), sf::Vector2f(0.f, m_level.getSize().y - 200.f)));
-	platforms.push_back(new Obstacle(sf::Vector2f(100.f, 25.f), sf::Vector2f(300.f, m_level.getSize().y - 200.f)));
-	platforms.push_back(new Obstacle(sf::Vector2f(100.f, 25.f), sf::Vector2f(500.f, m_level.getSize().y - 200.f)));
-	platforms.push_back(new Obstacle(sf::Vector2f(100.f, 25.f), sf::Vector2f(700.f, m_level.getSize().y - 200.f)));
-
-
-	for (int i = 0; i < platforms.size(); ++i) {
-		m_gameObjects.push_back(platforms[i]);
-		m_engine.addGameObject(*platforms[i]);
-	}
-	*/
 
 }

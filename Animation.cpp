@@ -27,6 +27,8 @@ Animation::Animation(std::string _name, int _frames[], int _frameNumber, bool _l
 
 	m_sprite.setTexture(m_texture);
 	m_sprite.setTextureRect(sf::IntRect(0, 0, m_frameSize.x, m_frameSize.y));
+
+	m_sprite.setOrigin(m_frameSize.x / 2.f, m_frameSize.y / 2.f);
 	m_sprite.setScale(0.5f, 0.5f);
 }
 

@@ -10,6 +10,7 @@ SpotLight::SpotLight() {
 		return;
 	}
 
+	m_sprite.setScale(0.5f, 0.5f);
 	m_sprite.setTexture(m_texture);
 	m_sprite.setOrigin(m_texture.getSize().x / 2.f, m_texture.getSize().y / 2.f);
 }

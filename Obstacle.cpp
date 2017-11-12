@@ -32,11 +32,11 @@ const bool Obstacle::isStatic() {
 	return m_isStatic;
 }
 
-Physics::Collider * const Obstacle::getCollider() {
+std::vector<Physics::Collider *> const Obstacle::getColliders() {
 	m_collider.x = m_shape.getPosition().x;
 	m_collider.y = m_shape.getPosition().y;
 
-	return &m_collider;
+	return std::vector<Physics::Collider*>({ &m_collider });
 }
 
 void Obstacle::setCollider(const Physics::Collider & _collider) {

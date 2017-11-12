@@ -16,7 +16,7 @@ public:
 	virtual void draw() = 0;
 
 	virtual const bool isStatic() = 0;
-	virtual Physics::Collider* const getCollider() = 0;
+	virtual std::vector<Physics::Collider*> const getColliders() = 0;
 	virtual void setCollider(const Physics::Collider& _collider) = 0;
 
 	virtual void move(const sf::Vector2f& _distance) = 0;

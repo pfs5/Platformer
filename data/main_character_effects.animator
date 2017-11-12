@@ -1,0 +1,6 @@
+# Starting animation
+S -1
+
+# Animations
+A DashEffectRight noloop effects/dash_effect_right.png 1 1 2 3
+A DashEffectLeft noloop effects/dash_effect_left.png 1 1 2 3

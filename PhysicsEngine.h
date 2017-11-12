@@ -7,11 +7,14 @@ class GameObject;
 
 namespace Physics {
 	struct Collider {
+		Collider() : isActive(true) {};
 		float x;
 		float y;
 		float width;
 		float height;
 	
+		bool isActive;
+
 		GameObject* gameObject;
 	};
 
